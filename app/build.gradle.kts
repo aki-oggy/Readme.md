@@ -20,15 +20,24 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        
+        // Add default BuildConfig fields
+        buildConfigField("String", "TMDB_API_KEY", "\"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZjgzNTFhYjU4MzJiZjZhZmY4YjYwYzEyZjczMzcwOCIsInN1YiI6IjY2OTYyNzMzYjNjNDQ4MDA3YjBkNTc1MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.test\"")
+        buildConfigField("String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\"")
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            buildConfigField("String", "TMDB_API_KEY", "\"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZjgzNTFhYjU4MzJiZjZhZmY4YjYwYzEyZjczMzcwOCIsInN1YiI6IjY2OTYyNzMzYjNjNDQ4MDA3YjBkNTc1MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.test\"")
+        }
         release {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "TMDB_API_KEY", "\"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZjgzNTFhYjU4MzJiZjZhZmY4YjYwYzEyZjczMzcwOCIsInN1YiI6IjY2OTYyNzMzYjNjNDQ4MDA3YjBkNTc1MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.test\"")
         }
     }
 
@@ -43,6 +52,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {

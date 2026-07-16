@@ -5,7 +5,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -16,12 +24,45 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    onTabChange: (Int) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings") }
+                title = { Text("⚙️ Settings") }
             )
+        },
+        bottomBar = {
+            BottomAppBar(
+                containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+            ) {
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+                    label = { Text("Home") },
+                    selected = false,
+                    onClick = { onTabChange(0) }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Search, contentDescription = "Search") },
+                    label = { Text("Search") },
+                    selected = false,
+                    onClick = { onTabChange(1) }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Favorite, contentDescription = "Watchlist") },
+                    label = { Text("Watchlist") },
+                    selected = false,
+                    onClick = { onTabChange(2) }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
+                    label = { Text("Settings") },
+                    selected = true,
+                    onClick = { onTabChange(3) }
+                )
+            }
         }
     ) { paddingValues ->
         Box(
@@ -34,11 +75,12 @@ fun SettingsScreen() {
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text("Settings")
-                Text("• Dark Mode: Coming Soon")
-                Text("• API Key Management: Coming Soon")
-                Text("• Cache Settings: Coming Soon")
-                Text("• About: Oggy v1.0")
+                Text("⚙️ Settings")
+                Text("📱 App Version: 1.0.0")
+                Text("🎬 Powered by TMDb")
+                Text("💾 Database: SQLite with Room")
+                Text("🔗 Network: Retrofit + OkHttp")
+                Text("🎨 UI: Jetpack Compose")
             }
         }
     }

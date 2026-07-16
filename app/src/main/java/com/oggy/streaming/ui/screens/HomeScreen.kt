@@ -10,12 +10,18 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -33,7 +39,8 @@ import com.oggy.streaming.viewmodel.MovieViewModel
 @Composable
 fun HomeScreen(
     viewModel: MovieViewModel,
-    onMovieClick: (Movie) -> Unit
+    onMovieClick: (Movie) -> Unit,
+    onTabChange: (Int) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     
@@ -47,6 +54,37 @@ fun HomeScreen(
                     }
                 }
             )
+        },
+        bottomBar = {
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+                    label = { Text("Home") },
+                    selected = true,
+                    onClick = { onTabChange(0) }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Search, contentDescription = "Search") },
+                    label = { Text("Search") },
+                    selected = false,
+                    onClick = { onTabChange(1) }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Favorite, contentDescription = "Watchlist") },
+                    label = { Text("Watchlist") },
+                    selected = false,
+                    onClick = { onTabChange(2) }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
+                    label = { Text("Settings") },
+                    selected = false,
+                    onClick = { onTabChange(3) }
+                )
+            }
         }
     ) { paddingValues ->
         when (uiState) {
@@ -57,7 +95,24 @@ fun HomeScreen(
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        CircularProgressIndicator()
+                        Text("Loading movies...")
+                    }
+                }
+            }
+            
+            is MovieUiState.Empty -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("No movies available. Try refreshing.")
                 }
             }
             
@@ -96,7 +151,8 @@ fun HomeScreen(
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
                             text = "Error: ${uiState.message}",

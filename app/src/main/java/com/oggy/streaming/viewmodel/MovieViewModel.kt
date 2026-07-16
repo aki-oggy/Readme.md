@@ -33,21 +33,32 @@ class MovieViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _uiState.value = MovieUiState.Loading
+                
+                // Fetch data from API
                 movieRepository.getTrendingMovies()
                 movieRepository.getPopularMovies()
                 movieRepository.getTopRatedMovies()
-                movieRepository.getUpcomingMovies()
                 
+                // Collect from database
                 movieRepository.getAllMovies().collect { movies ->
-                    _uiState.value = MovieUiState.Success(movies)
+                    if (movies.isNotEmpty()) {
+                        _uiState.value = MovieUiState.Success(movies)
+                    } else {
+                        _uiState.value = MovieUiState.Empty
+                    }
                 }
             } catch (e: Exception) {
-                _uiState.value = MovieUiState.Error(e.message ?: "Unknown error")
+                _uiState.value = MovieUiState.Error(e.message ?: "Unknown error occurred")
             }
         }
     }
     
     fun searchMovies(query: String) {
+        if (query.isBlank()) {
+            _searchResults.value = emptyList()
+            return
+        }
+        
         viewModelScope.launch {
             try {
                 _isLoading.value = true
@@ -65,13 +76,21 @@ class MovieViewModel @Inject constructor(
     
     fun addToFavorites(movie: Movie) {
         viewModelScope.launch {
-            movieRepository.addToFavorites(movie)
+            try {
+                movieRepository.addToFavorites(movie)
+            } catch (e: Exception) {
+                _uiState.value = MovieUiState.Error("Failed to add to favorites: ${e.message}")
+            }
         }
     }
     
     fun removeFromFavorites(movie: Movie) {
         viewModelScope.launch {
-            movieRepository.removeFromFavorites(movie)
+            try {
+                movieRepository.removeFromFavorites(movie)
+            } catch (e: Exception) {
+                _uiState.value = MovieUiState.Error("Failed to remove from favorites: ${e.message}")
+            }
         }
     }
     
@@ -82,6 +101,7 @@ class MovieViewModel @Inject constructor(
 
 sealed class MovieUiState {
     object Loading : MovieUiState()
+    object Empty : MovieUiState()
     data class Success(val movies: List<Movie>) : MovieUiState()
     data class Error(val message: String) : MovieUiState()
 }

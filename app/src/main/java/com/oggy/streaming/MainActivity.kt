@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -34,28 +33,31 @@ class MainActivity : ComponentActivity() {
                     var selectedTab by remember { mutableIntStateOf(0) }
                     val movieViewModel: MovieViewModel = hiltViewModel()
                     
-                    Scaffold { _ ->
-                        when (selectedTab) {
-                            0 -> HomeScreen(
-                                viewModel = movieViewModel,
-                                onMovieClick = { movie ->
-                                    // Handle movie click - navigate to details
-                                }
-                            )
-                            1 -> SearchScreen(
-                                viewModel = movieViewModel,
-                                onMovieClick = { movie ->
-                                    // Handle movie click - navigate to details
-                                }
-                            )
-                            2 -> WatchlistScreen(
-                                viewModel = movieViewModel,
-                                onMovieClick = { movie ->
-                                    // Handle movie click - navigate to details
-                                }
-                            )
-                            3 -> SettingsScreen()
-                        }
+                    when (selectedTab) {
+                        0 -> HomeScreen(
+                            viewModel = movieViewModel,
+                            onMovieClick = { movie ->
+                                // Handle movie click - navigate to details
+                            },
+                            onTabChange = { selectedTab = it }
+                        )
+                        1 -> SearchScreen(
+                            viewModel = movieViewModel,
+                            onMovieClick = { movie ->
+                                // Handle movie click - navigate to details
+                            },
+                            onTabChange = { selectedTab = it }
+                        )
+                        2 -> WatchlistScreen(
+                            viewModel = movieViewModel,
+                            onMovieClick = { movie ->
+                                // Handle movie click - navigate to details
+                            },
+                            onTabChange = { selectedTab = it }
+                        )
+                        3 -> SettingsScreen(
+                            onTabChange = { selectedTab = it }
+                        )
                     }
                 }
             }

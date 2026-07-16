@@ -9,9 +9,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,7 +37,8 @@ import com.oggy.streaming.viewmodel.MovieViewModel
 @Composable
 fun SearchScreen(
     viewModel: MovieViewModel,
-    onMovieClick: (Movie) -> Unit
+    onMovieClick: (Movie) -> Unit,
+    onTabChange: (Int) -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val searchResults = viewModel.searchResults.collectAsState().value
@@ -41,8 +47,39 @@ fun SearchScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Search") }
+                title = { Text("🔍 Search") }
             )
+        },
+        bottomBar = {
+            BottomAppBar(
+                containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+            ) {
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+                    label = { Text("Home") },
+                    selected = false,
+                    onClick = { onTabChange(0) }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Search, contentDescription = "Search") },
+                    label = { Text("Search") },
+                    selected = true,
+                    onClick = { onTabChange(1) }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Favorite, contentDescription = "Watchlist") },
+                    label = { Text("Watchlist") },
+                    selected = false,
+                    onClick = { onTabChange(2) }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.Settings, contentDescription = "Settings") },
+                    label = { Text("Settings") },
+                    selected = false,
+                    onClick = { onTabChange(3) }
+                )
+            }
         }
     ) { paddingValues ->
         Column(
@@ -63,7 +100,6 @@ fun SearchScreen(
                 },
                 label = { Text("Search movies...") },
                 modifier = Modifier.fillMaxWidth(),
-                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search") },
                 singleLine = true
             )
             
